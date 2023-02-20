@@ -14,3 +14,9 @@ expose with route (for testing)...
 export INGRESS_DOMAIN=$(oc get ingress.config.openshift.io cluster -o jsonpath={.spec.domain})
 helm upgrade -i cups helm/cups -n cups --create-namespace -f helm/cups/values-expose.yaml --set ingress.hosts[0].host=cups-cups.${INGRESS_DOMAIN}
 ```
+
+or...
+
+```sh
+oc port-forward $(oc get pods -n cups -o name) -n cups 6631:6631
+```
