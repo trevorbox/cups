@@ -30,22 +30,18 @@ spec:
       initContainers:
         - name: cupsd-conf
           image: busybox
-          command: ["sh", "-c", "cp /tmp/cupsd.conf /etc/cups/cupsd.conf && chmod 0660 /etc/cups/cupsd.conf && chown 1000:7 /etc/cups/cupsd.conf"]
+          command: ["sh", "-c", "cp /tmp/cupsd.conf /etc/cups/cupsd.conf && chmod 0660 /etc/cups/cupsd.conf && chown 1000:7 /etc/cups/cupsd.conf && cp /tmp/printers.conf /etc/cups/printers.conf && chmod 0660 /etc/cups/printers.conf && chown 1000:7 /etc/cups/printers.conf"]
           volumeMounts:
             - name: cupsd-conf
               mountPath: /tmp/cupsd.conf
               subPath: cupsd.conf
             - name: empty
-              mountPath: /etc/cups/
-        - name: printers-conf
-          image: busybox
-          command: ["sh", "-c", "cp /tmp/printers.conf /etc/cups/printers.conf && chmod 0660 /etc/cups/printers.conf && chown 1000:7 /etc/cups/printers.conf"]
-          volumeMounts:
+              mountPath: /etc/cups/cupsd.conf
             - name: printers-conf
               mountPath: /tmp/printers.conf
               subPath: printers.conf
             - name: empty-printers-conf
-              mountPath: /etc/cups/
+              mountPath: /etc/cups/printers.conf
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
