@@ -1,0 +1,28 @@
+﻿kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: printers.conf
+data:
+  printers.conf: |
+    # copied over from printers.conf
+    <Printer hostname-printer>
+    PrinterId 18
+    UUID urn:uuid:e41e5e7a-6622-3369-52fb-bca5d27e7c29
+    Info 
+    Location 
+    MakeModel Generic PDF Printer
+    # your hostname 
+    DeviceURI http://cups.cups.svc.cluster.local
+    State Idle
+    StateTime 1691687012
+    ConfigTime 1691687012
+    Type 4124
+    Accepting Yes
+    Shared No
+    JobSheets none none
+    QuotaPeriod 0
+    PageLimit 0
+    KLimit 0
+    OpPolicy default
+    ErrorPolicy stop-printer
+    </Printer>
