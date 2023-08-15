@@ -167,7 +167,7 @@ data:
     <Policy kerberos>
       # Job/subscription privacy...
       JobPrivateAccess default
-      JobPrivateValues default
+      JobPrivateValues none
       SubscriptionPrivateAccess default
       SubscriptionPrivateValues default
 
