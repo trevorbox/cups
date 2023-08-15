@@ -21,6 +21,22 @@ or...
 oc port-forward $(oc get pods -n cups -o name) -n cups 6631:6631
 ```
 
+## build & publish
+
+```sh
+export IMG_REGISTRY= # quay.io/trevorbox/cups
+podman build -t ${IMG_REGISTRY}:latest .
+# run locally...
+podman run -it --rm --entrypoint "/bin/bash" ${IMG_REGISTRY}:latest
+podman push ${IMG_REGISTRY}:latest
+```
+
+test published image...
+
+```sh
+helm upgrade -i cups helm/cups -n cups --create-namespace --set image.repository=${IMG_REGISTRY}
+```
+
 ## CUPS Printer Drivers and Configurations.
 
 A typical CUPS install provides printer drivers dynamically by using a driver information file (.drv) and creating a PPD driver file that can be used by CUPS printers. By default, when a printer is configured in CUPS, the PPD driver is saved to the /etc/cups/ppd/ directory, and the printer definition is added to the /etc/cups/printers.conf file. The printers.conf file can hold information for more than one printer and required PPD files can be added to the /etc/cups/ppd/ directory.

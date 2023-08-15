@@ -6,7 +6,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
     route.openshift.io/termination: "edge"
   hosts:
-    - host: apps-crc.testing
+    - host: cups.apps-crc.testing
       paths:
         - path: /
           pathType: ImplementationSpecific
