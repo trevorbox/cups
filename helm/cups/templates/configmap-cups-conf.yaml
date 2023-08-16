@@ -1,0 +1,11 @@
+{{- $cupsd := .Values.config.cupsd | required ".Values.config.cupsd must be defined. Set the value from respective files specified via the helm command line with --set-file=config.cupsd=<somefolder>/cupsd.conf" }}
+{{- $printers := .Values.config.printers | required ".Values.config.printers must be defined. Set the value from respective files specified via the helm command line with --set-file=config.printers=<somefolder>/printers.conf" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cups.fullname" . }}-conf
+data:
+  cupsd.conf: |
+    {{- $cupsd | nindent 4 }}
+  printers.conf: |
+    {{- $printers | nindent 4 }}

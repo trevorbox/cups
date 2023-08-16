@@ -32,10 +32,10 @@ spec:
           image: busybox
           command: ["sh", "-c", "cp /tmp/cupsd.conf /etc/cups/cupsd.conf && chmod 0660 /etc/cups/cupsd.conf && chown 1000:7 /etc/cups/cupsd.conf && cp /tmp/printers.conf /etc/cups/printers.conf && chmod 0660 /etc/cups/printers.conf && chown 1000:7 /etc/cups/printers.conf"]
           volumeMounts:
-            - name: cupsd-conf
+            - name: cups-conf
               mountPath: /tmp/cupsd.conf
               subPath: cupsd.conf
-            - name: printers-conf
+            - name: cups-conf
               mountPath: /tmp/printers.conf
               subPath: printers.conf
             - name: empty
@@ -72,13 +72,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: cupsd-conf
+        - name: cups-conf
           configMap:
-            name: cupsd.conf
+            name: {{ include "cups.fullname" . }}-conf
             defaultMode: 0777
         - name: empty
           emptyDir: {}
-        - name: printers-conf
-          configMap:
-            name: printers.conf
-            defaultMode: 0777

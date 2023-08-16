@@ -86,3 +86,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+config:
+  cupsd:
+  printers:
