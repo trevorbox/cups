@@ -76,7 +76,7 @@ data:
     <Policy default>
       # Job/subscription privacy...
       JobPrivateAccess default
-      JobPrivateValues default
+      JobPrivateValues none
       SubscriptionPrivateAccess default
       SubscriptionPrivateValues default
 
@@ -167,7 +167,7 @@ data:
     <Policy kerberos>
       # Job/subscription privacy...
       JobPrivateAccess default
-      JobPrivateValues none
+      JobPrivateValues default
       SubscriptionPrivateAccess default
       SubscriptionPrivateValues default
 
