@@ -87,6 +87,10 @@ tolerations: []
 
 affinity: {}
 
+openshift:
+  clusterAdmin:
+    createRolebinding: true
+
 config:
   cupsd:
   printers:
