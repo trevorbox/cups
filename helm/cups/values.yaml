@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: quay.io/wuzeng/test-cups
-  pullPolicy: Always
+  repository: registry.redhat.io/rhel9/cups
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
@@ -16,7 +16,7 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: false
+  create: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
