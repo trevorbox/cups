@@ -1,0 +1,19 @@
+{{- range $num, $element := .Values.statefulSets }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cups.fullname" $ }}-{{ $num }}
+spec:
+  type: {{ $.Values.service.type }}
+  clusterIP: None
+  ports:
+    - port: {{ $.Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ include "cups.fullname" $ }}
+    statefulset: {{ include "cups.fullname" $ }}-{{ $num }}
+...
+{{- end }}

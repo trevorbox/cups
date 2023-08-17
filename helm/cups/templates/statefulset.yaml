@@ -9,7 +9,7 @@ metadata:
     app: {{ include "cups.fullname" $ }}
 spec:
   replicas: {{ $.Values.replicaCount }}
-  serviceName: {{ include "cups.fullname" $  }}
+  serviceName: {{ include "cups.fullname" $ }}-{{ $num }}
   selector:
     matchLabels: 
       app: {{ include "cups.fullname" $ }}
