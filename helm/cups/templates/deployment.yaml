@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cups.fullname" . }}
+  labels:
+    {{- include "cups.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cups.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "cups.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "cups.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: cupsd-conf
+          image: busybox
+          command: ["sh", "-c", "cp /tmp/cupsd.conf /etc/cups/cupsd.conf && chmod 0660 /etc/cups/cupsd.conf && chown 1000:7 /etc/cups/cupsd.conf && cp /tmp/printers.conf /etc/cups/printers.conf && chmod 0660 /etc/cups/printers.conf && chown 1000:7 /etc/cups/printers.conf"]
+          volumeMounts:
+            - name: cups-conf
+              mountPath: /tmp/cupsd.conf
+              subPath: cupsd.conf
+            - name: cups-conf
+              mountPath: /tmp/printers.conf
+              subPath: printers.conf
+            - name: empty
+              mountPath: /etc/cups/
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: empty
+              mountPath: /etc/cups/cupsd.conf
+              subPath: cupsd.conf
+            - name: empty
+              mountPath: /etc/cups/printers.conf
+              subPath: printers.conf
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: cups-conf
+          configMap:
+            name: {{ include "cups.fullname" . }}-conf
+            defaultMode: 0777
+        - name: empty
+          emptyDir: {}

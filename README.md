@@ -5,14 +5,20 @@ Deploy [CUPS](https://en.wikipedia.org/wiki/CUPS) on Openshift.
 > Note: this is to test running the registry.redhat.io/rhel9/cups:latest image.
 
 ```sh
-helm upgrade -i cups helm/cups -n cups --create-namespace
+helm upgrade -i cups helm/cups -n cups --create-namespace \
+  --set-file=config.cupsd=examples/cupsd.conf \
+  --set-file=config.printers=examples/printers.conf
 ```
 
 expose with route (for testing)...
 
 ```sh
 export INGRESS_DOMAIN=$(oc get ingress.config.openshift.io cluster -o jsonpath={.spec.domain})
-helm upgrade -i cups helm/cups -n cups --create-namespace -f helm/cups/values-expose.yaml --set ingress.hosts[0].host=cups-cups.${INGRESS_DOMAIN}
+helm upgrade -i cups helm/cups -n cups --create-namespace \
+  -f helm/cups/values-expose.yaml \
+  --set ingress.hosts[0].host=cups-cups.${INGRESS_DOMAIN} \
+  --set-file=config.cupsd=examples/cupsd.conf \
+  --set-file=config.printers=examples/printers.conf
 ```
 
 or...
@@ -34,7 +40,10 @@ podman push ${IMG_REGISTRY}:latest
 test published image...
 
 ```sh
-helm upgrade -i cups helm/cups -n cups --create-namespace --set image.repository=${IMG_REGISTRY}
+helm upgrade -i cups helm/cups -n cups --create-namespace \
+  --set image.repository=${IMG_REGISTRY} \
+  --set-file=config.cupsd=examples/cupsd.conf \
+  --set-file=config.printers=examples/printers.conf
 ```
 
 ## CUPS Printer Drivers and Configurations.

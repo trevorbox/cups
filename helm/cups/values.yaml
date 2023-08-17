@@ -85,22 +85,12 @@ nodeSelector: {}
 
 tolerations: []
 
-# ## pod anti-affinity rule for cups pods
-# affinity:
-#   podAntiAffinity:
-#     requiredDuringSchedulingIgnoredDuringExecution:
-#     - labelSelector:
-#         matchExpressions:
-#         - key: security ##change the label to the pod's label
-#           operator: In
-#           values:
-#           - s1 ##CHANGEME
+affinity: {}
 
-statefulSets: 
-  - storageClass: gp3-csi
-    num: one
-  - storageClass: gp3-csi
-    num: two
-  - storageClass: gp3-csi
-    num: three
+openshift:
+  clusterAdmin:
+    createRolebinding: true
 
+config:
+  cupsd:
+  printers:
