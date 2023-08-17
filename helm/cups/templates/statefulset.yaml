@@ -1,22 +1,20 @@
-{{- range .Values.statefulSets }}
+{{- range $num, $element := .Values.statefulSets }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "cups.fullname" $ }}-{{ .name }}
+  name: {{ include "cups.fullname" $ }}-{{ $num }}
   labels: 
     {{- include "cups.labels" $ | nindent 4 }}
     app: {{ include "cups.fullname" $ }}
 spec:
-  {{- if not $.Values.autoscaling.enabled }}
   replicas: {{ $.Values.replicaCount }}
-  {{- end }}
   serviceName: {{ include "cups.fullname" $  }}
   selector:
     matchLabels: 
       app: {{ include "cups.fullname" $ }}
       # label unique to the statefulset
-      statefulset: {{ .name }}
+      statefulset: {{ include "cups.fullname" $ }}-{{ $num }}
   template:
     metadata:
       {{- with $.Values.podAnnotations }}
@@ -25,7 +23,7 @@ spec:
       {{- end }}
       labels:
         app: {{ include "cups.fullname" $ }}
-        statefulset: {{ .name }}
+        statefulset: {{ include "cups.fullname" $ }}-{{ $num }}
     spec:
       {{- with $.Values.imagePullSecrets }}
       imagePullSecrets:
@@ -74,14 +72,16 @@ spec:
       {{- end }}
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app 
-                operator: In
-                values:
-                - {{ $.Chart.Name }}
-            topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ include "cups.fullname" $ }}
+              topologyKey: kubernetes.io/hostname
       {{- with $.Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
@@ -98,10 +98,11 @@ spec:
       name: print-jobs
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: {{ .storageClassName }}
+      {{- with $element.storageClassName }}
+      storageClassName: {{ . }}
+      {{- end }}
       resources: 
         requests: 
-          storage: 1Gi
-
+          storage: {{ $.Values.volumeClaimTemplate.size | default "1Gi" }}
 ...
 {{- end }}
