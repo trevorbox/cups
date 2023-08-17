@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: registry.redhat.io/rhel9/cups
-  pullPolicy: IfNotPresent
+  repository: quay.io/wuzeng/test-cups
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
@@ -25,8 +25,9 @@ serviceAccount:
 
 podAnnotations: {}
 
+## lp
 podSecurityContext: 
-  # fsGroup: 7
+  fsGroup: 7
 
 securityContext: 
   # capabilities:
@@ -35,10 +36,10 @@ securityContext:
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-  # fsGroup: 7
+  # fsGroup: 1000
   # fsGroupChangePolicy: "Always"
-  runAsUser: 1000
-  # runAsGroup: 7
+  # runAsUser: 1000
+  # runAsGroup: 1000
   # fsGroup: 7
   # privileged: true
 
@@ -74,23 +75,25 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
 nodeSelector: {}
 
 tolerations: []
-
-affinity: {}
 
 openshift:
   clusterAdmin:
     createRolebinding: true
 
+# Set these values from respective files specified via the helm command line with --set-file
 config:
   cupsd:
   printers:
+
+# global pvc size for all statefulsets
+volumeClaimTemplate:
+  size: 2Gi
+
+# create many statefulsets with different storageclasses
+statefulSets:
+  - storageClassName:
+  - storageClassName:
+  - storageClassName:
