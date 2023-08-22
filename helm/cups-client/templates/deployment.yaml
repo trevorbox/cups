@@ -4,6 +4,7 @@ metadata:
   name: {{ include "cups-client.fullname" . }}
   labels:
     {{- include "cups-client.labels" . | nindent 4 }}
+    app: {{ include "cups-client.fullname" . }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -11,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "cups-client.selectorLabels" . | nindent 6 }}
+      app: {{ include "cups-client.fullname" . }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,6 +21,7 @@ spec:
       {{- end }}
       labels:
         {{- include "cups-client.selectorLabels" . | nindent 8 }}
+        app: {{ include "cups-client.fullname" . }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -27,6 +30,16 @@ spec:
       serviceAccountName: {{ include "cups-client.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: client-conf
+          image: registry.access.redhat.com/ubi9/ubi-minimal
+          command: ["sh", "-c", "cp /tmp/client.conf /etc/cups/client.conf && chmod 0660 /etc/cups/client.conf && chown 1000:7 /etc/cups/client.conf"]
+          volumeMounts:
+            - name: client-conf
+              mountPath: /tmp/client.conf
+              subPath: client.conf
+            - name: empty
+              mountPath: /etc/cups/
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -37,16 +50,12 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts: 
+            - name: empty
+              mountPath: /etc/cups/client.conf
+              subPath: client.conf
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -59,3 +68,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes: 
+        - name: client-conf
+          configMap:
+            name: {{ include "cups-client.fullname" . }}-conf
+            defaultMode: 0777
+        - name: empty
+          emptyDir: {}
+
