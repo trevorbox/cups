@@ -27,6 +27,16 @@ or...
 oc port-forward $(oc get pods -n cups -o name) -n cups 6631:6631
 ```
 
+# cups-client
+Deploy cups-client on OpenShift
+
+```sh
+
+helm upgrade -i client helm/cups-client -n cups --create-namespace \
+  --set-file=config.client=examples/client.conf
+
+```
+
 ## build & publish
 
 ```sh

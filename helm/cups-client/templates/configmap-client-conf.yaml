@@ -1,0 +1,8 @@
+{{- $client := .Values.config.client | required ".Values.config.client must be defined. Set the value from respective files specified via the helm command line with --set-file=config.client=<somefolder>/client.conf" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cups-client.fullname" . }}-conf
+data:
+  client.conf: |
+    {{- $client | nindent 4 }}
