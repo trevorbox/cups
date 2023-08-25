@@ -2,6 +2,8 @@
 
 Deploy [CUPS](https://en.wikipedia.org/wiki/CUPS) StatefulSets on Openshift.
 
+![CUPS StatefulSet](./.pics/CUPS-StatefulSet.png)
+
 > Note: this is to test running the registry.redhat.io/rhel9/cups:latest image.
 
 ```sh
