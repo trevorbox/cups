@@ -98,7 +98,8 @@ statefulSets:
   - storageClassName:
   - storageClassName:
 
-networkPolicy: 
+networkPolicy:
+  enabled: true 
   namespaceLabels: 
     # your namespace label(s)
     
