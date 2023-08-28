@@ -21,6 +21,7 @@ spec:
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-cups-conf.yaml") $ | sha256sum }}
       labels:
         app: {{ include "cups.fullname" $ }}
         statefulset: {{ include "cups.fullname" $ }}-{{ $num }}
