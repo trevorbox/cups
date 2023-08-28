@@ -1,0 +1,58 @@
+{{- if .Values.networkPolicy.enabled }}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-by-default
+spec:
+  podSelector: {}
+  ingress: []
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-openshift-ingress
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress
+  podSelector: {}
+  policyTypes:
+  - Ingress
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-same-namespace
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector: {}
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-pod-and-namespace-both
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ include "cups.fullname" . }}
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            {{- with .Values.networkPolicy.namespaceLabels }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+        podSelector:
+          matchLabels:
+            {{- with .Values.networkPolicy.cupsClientLabels }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+{{- end }}

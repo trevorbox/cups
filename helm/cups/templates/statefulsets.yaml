@@ -17,9 +17,15 @@ spec:
       statefulset: {{ include "cups.fullname" $ }}-{{ $num }}
   template:
     metadata:
+      {{- if $.Values.podAnnotations }}
       {{- with $.Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-cups-conf.yaml") $ | sha256sum }}
+      {{- else }}
+      annotations: 
+        checksum/config: {{ include (print $.Template.BasePath "/configmap-cups-conf.yaml") $ | sha256sum }}
       {{- end }}
       labels:
         app: {{ include "cups.fullname" $ }}

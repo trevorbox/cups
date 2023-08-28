@@ -97,3 +97,13 @@ statefulSets:
   - storageClassName:
   - storageClassName:
   - storageClassName:
+
+networkPolicy:
+  enabled: true 
+  namespaceLabels: 
+    # your namespace label(s)
+    
+
+  cupsClientLabels:
+    # your cups-client app label(s)
+    

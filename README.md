@@ -29,6 +29,14 @@ or...
 oc port-forward $(oc get pods -n cups -o name) -n cups 6631:6631
 ```
 
+## Network Policies 
+Network policies are defined in `/helm/cups/templates/networkpolicies.yaml`. Remove or add rules to the file to make less or more restrictive network policies. Network policies are additive and configured using pod labels and namespace labels. See OpenShift documentaiton for more details: https://docs.openshift.com/container-platform/4.10/networking/network_policy/about-network-policy.html. 
+
+## Rollout New Pods when ConfigMap Updates
+
+Adding annotation `checksum/config: {{ include (print $.Template.BasePath "/configmap-cups-conf.yaml") $ | sha256sum }}` to the StatefulSet to allow `helm upgrade` to detect a change to the StatefulSet whenever there is a change to `config-cups-conf.yaml` and roll out new pods.  This way new pods will be running with the new configurations.
+
+
 # cups-client
 Deploy cups-client on OpenShift
 
