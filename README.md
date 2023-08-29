@@ -71,6 +71,16 @@ helm upgrade -i cups helm/cups -n cups --create-namespace \
 A typical CUPS install provides printer drivers dynamically by using a driver information file (.drv) and creating a PPD driver file that can be used by CUPS printers. By default, when a printer is configured in CUPS, the PPD driver is saved to the /etc/cups/ppd/ directory, and the printer definition is added to the /etc/cups/printers.conf file. The printers.conf file can hold information for more than one printer and required PPD files can be added to the /etc/cups/ppd/ directory.
 
 If the printer configurations (/etc/cups/printers.conf) and drivers (/etc/cups/ppd/) that are required are known these can be included in builds.
+Make sure that ownership is set to root:lp
+
+In most cases, CUPS can print successfully with one of the provided default drivers which are set in the /etc/cups/printers.conf file as:
+MakeModel Generic IPP Everywhere Printer
+MakeModel Generic PostScript Printer
+
+If you do need a specific driver, you can download a PPD file from https://www.openprinting.org/download/PPD/ and save them 
+as /etc/cups/ppd/<print_queue>.ppd
+
+A Sample of the printers.conf file is in the examples/printers.custom file. You can modify the DeviceURI, Location, and Info lines as needed.
 
 ## Sending Test Print Jobs
 
