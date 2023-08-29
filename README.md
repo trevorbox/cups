@@ -91,3 +91,5 @@ lp -d printer_name -t "Print Job XYZ" /usr/share/cups/data/default-testpage.pdf
 ```
 
 Finally, from the CUPS UI, select a printer and then in the Maintenance drop down list select "Print Test Page"
+
+test
