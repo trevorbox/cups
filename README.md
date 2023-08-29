@@ -74,9 +74,10 @@ If the printer configurations (/etc/cups/printers.conf) and drivers (/etc/cups/p
 Make sure that ownership is set to root:lp
 
 In most cases, CUPS can print successfully with one of the provided default drivers which are set in the /etc/cups/printers.conf file as:
+```
 MakeModel Generic IPP Everywhere Printer
 MakeModel Generic PostScript Printer
-
+```
 If you do need a specific driver, you can download a PPD file from https://www.openprinting.org/download/PPD/ and save them 
 as /etc/cups/ppd/<print_queue>.ppd
 
