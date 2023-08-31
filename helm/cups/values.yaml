@@ -102,11 +102,11 @@ networkPolicy:
   enabled: true 
   namespaceLabels: 
     # your namespace label(s) ie:
-    # project: test
+    # project: project-name
 
   cupsClientLabels:
     # your cups-client app label(s) ie:
-    # app: test-client-app
+    # name: test-client-app
     
 horizontalPodAutoscaler:
   enabled: true
