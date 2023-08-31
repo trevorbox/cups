@@ -1,0 +1,31 @@
+{{- if .Values.horizontalPodAutoscaler.enabled }}
+{{- range $num, $element := .Values.statefulSets }}
+---
+apiVersion: autoscaling/v2 
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "cups.fullname" $ }}-{{ $num }}-hpa-compute 
+  namespace: {{ $.Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1 
+    kind: StatefulSet 
+    name: {{ include "cups.fullname" $ }}-{{ $num }}
+  minReplicas: 1 
+  maxReplicas: 2 
+  metrics: 
+  - type: Resource
+    resource:
+      name: cpu 
+      target:
+        type: AverageValue 
+        averageValue: 500m 
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue 
+        averageValue: 128Mi 
+...
+{{- end }}
+{{- end }}

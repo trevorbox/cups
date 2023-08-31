@@ -61,8 +61,10 @@ spec:
             - name: http
               containerPort: {{ $.Values.service.port }}
               protocol: TCP
+          {{- if $.Values.horizontalPodAutoscaler.enabled }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: empty
               mountPath: /etc/cups/cupsd.conf
