@@ -101,11 +101,12 @@ statefulSets:
 networkPolicy:
   enabled: true 
   namespaceLabels: 
-    # your namespace label(s)
-    
+    # your namespace label(s) ie:
+    # project: test
 
   cupsClientLabels:
-    # your cups-client app label(s)
+    # your cups-client app label(s) ie:
+    # app: test-client-app
     
 horizontalPodAutoscaler:
   enabled: true
