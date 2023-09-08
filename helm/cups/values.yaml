@@ -8,7 +8,7 @@ image:
   repository: quay.io/wuzeng/test-cups
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v2"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
