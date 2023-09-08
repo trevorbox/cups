@@ -86,7 +86,7 @@ openshift:
 # Set these values from respective files specified via the helm command line with --set-file
 config:
   cupsd:
-  printers:
+
 
 # global pvc size for all statefulsets
 volumeClaimTemplate:
