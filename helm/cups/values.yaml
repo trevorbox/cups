@@ -8,7 +8,7 @@ image:
   repository: quay.io/wuzeng/test-cups
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "v2"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -86,7 +86,7 @@ openshift:
 # Set these values from respective files specified via the helm command line with --set-file
 config:
   cupsd:
-  printers:
+
 
 # global pvc size for all statefulsets
 volumeClaimTemplate:
